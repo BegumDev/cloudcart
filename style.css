@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+
+/* Navigation */
+nav { background: #1a1a2e; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+nav .brand { color: #fff; font-size: 1.5rem; font-weight: 700; text-decoration: none; letter-spacing: 0.5px; }
+nav .links { display: flex; align-items: center; gap: 1.5rem; }
+nav .links a { color: #e0e0e0; text-decoration: none; font-weight: 600; transition: color 0.3s; }
+nav .links a:hover { color: #fff; }
+nav .links span { color: #9ba4b5; font-size: 0.9rem; }
+
+/* Main Container */
+.container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+h2 { margin-bottom: 1.5rem; color: #1a1a2e; }
+
+/* Authentication Forms (Login/Register) */
+.auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+.auth-card { background: #fff; padding: 2.5rem; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+.auth-card h2 { text-align: center; margin-bottom: 2rem; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #555; }
+.form-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; transition: border-color 0.3s, box-shadow 0.3s; }
+.form-group input:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.15); }
+.auth-links { margin-top: 1.5rem; text-align: center; font-size: 0.9rem; }
+.auth-links a { color: #007bff; text-decoration: none; font-weight: 600; }
+.auth-links a:hover { text-decoration: underline; }
+.alert { padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.9rem; }
+.alert-error { background: #ffe6e6; color: #dc3545; border: 1px solid #ffcccc; }
+.alert-success { background: #e6ffe6; color: #28a745; border: 1px solid #ccffcc; }
+
+/* Buttons */
+.btn { display: inline-block; width: 100%; padding: 0.75rem 1.5rem; background: #007bff; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; text-align: center; transition: background 0.3s, transform 0.1s; text-decoration: none; }
+.btn:hover { background: #0056b3; }
+.btn:active { transform: scale(0.98); }
+.btn-danger { background: #dc3545; }
+.btn-danger:hover { background: #c82333; }
+.btn-success { background: #28a745; }
+.btn-success:hover { background: #218838; }
+
+/* Product Grid */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+.product-card { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); display: flex; flex-direction: column; border: 1px solid #f0f0f0; transition: transform 0.3s, box-shadow 0.3s; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px rgba(0,0,0,0.08); }
+.product-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #1a1a2e; }
+.product-card p { color: #666; font-size: 0.95rem; margin-bottom: 1rem; flex-grow: 1; }
+.product-price { font-size: 1.5rem; color: #28a745; font-weight: 700; margin-bottom: 0.5rem; }
+.product-stock { font-size: 0.85rem; color: #999; margin-bottom: 1.25rem; font-weight: 600; }
+
+/* Cart Table */
+.cart-table-wrapper { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); overflow: hidden; margin-bottom: 2rem; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th, td { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f0f0f0; }
+th { background: #fafafa; font-weight: 600; color: #444; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+td { color: #333; font-size: 1rem; }
+tr:last-child td { border-bottom: none; }
+.cart-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+.cart-actions .btn { width: auto; min-width: 150px; }

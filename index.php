@@ -39,7 +39,66 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                 <span style="margin-left:15px; color:#ddd;">Welcome, <?= htmlspecialchars($_SESSION['username']) ?></span>
                 <a href="logout.php">Logout</a>
             <?php else: ?>
+                <a href="login.php">Login / Register</a><?php
+session_start();
+require_once 'config.php';
+
+try {
+    $stmt = $conn->query("SELECT * FROM Products WHERE stock_quantity > 0");
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    die("Error fetching products: " . $e->getMessage());
+}
+
+$cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudCart - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.php" class="brand">CloudCart</a>
+        <div class="links">
+            <a href="index.php">Catalog</a>
+            <a href="cart.php">Cart (<?= $cart_count ?>)</a>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <span>Welcome, <?= htmlspecialchars($_SESSION['username']) ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
                 <a href="login.php">Login / Register</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Product Catalog</h2>
+        <div class="product-grid">
+            <?php if (!empty($products)): ?>
+                <?php foreach ($products as $product): ?>
+                    <div class="product-card">
+                        <h3><?= htmlspecialchars($product['name']) ?></h3>
+                        <p><?= htmlspecialchars($product['description']) ?></p>
+                        <div class="product-price">$<?= number_format($product['price'], 2) ?></div>
+                        <div class="product-stock">In Stock: <?= $product['stock_quantity'] ?></div>
+                        <form action="cart.php" method="POST">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                            <input type="hidden" name="action" value="add">
+                            <button type="submit" class="btn">Add to Cart</button>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No products available at the moment.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</body>
+</html>
             <?php endif; ?>
         </div>
     </nav>

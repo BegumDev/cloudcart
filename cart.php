@@ -43,7 +43,87 @@ if (isset($_GET['action']) && $_GET['action'] === 'clear') {
     </style>
 </head>
 <body>
-    <h2>Your Shopping Cart</h2>
+    <h2>Your Shopping Cart</h2><?php
+session_start();
+require_once 'config.php';
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
+    $product_id = $_POST['product_id'];
+    if (isset($_SESSION['cart'][$product_id])) {
+        $_SESSION['cart'][$product_id]++;
+    } else {
+        $_SESSION['cart'][$product_id] = 1;
+    }
+    header("Location: index.php");
+    exit;
+}
+
+if (isset($_GET['action']) && $_GET['action'] === 'clear') {
+    $_SESSION['cart'] = [];
+    header("Location: cart.php");
+    exit;
+}
+
+$cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudCart - Cart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.php" class="brand">CloudCart</a>
+        <div class="links">
+            <a href="index.php">Catalog</a>
+            <a href="cart.php">Cart (<?= $cart_count ?>)</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <span>Welcome, <?= htmlspecialchars($_SESSION['username']) ?></span>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login / Register</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Your Shopping Cart</h2>
+        
+        <?php if (empty($_SESSION['cart'])): ?>
+            <div class="auth-card" style="margin: 2rem auto; text-align: center;">
+                <p style="margin-bottom: 1.5rem; color: #666;">Your cart is currently empty.</p>
+                <a href="index.php" class="btn">Return to Catalog</a>
+            </div>
+        <?php else: ?>
+            <div class="cart-table-wrapper">
+                <table>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Quantity</th>
+                    </tr>
+                    <?php foreach ($_SESSION['cart'] as $id => $qty): ?>
+                    <tr>
+                        <td>#<?= htmlspecialchars($id) ?></td>
+                        <td><?= htmlspecialchars($qty) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+            
+            <div class="cart-actions">
+                <a href="cart.php?action=clear" class="btn btn-danger">Clear Cart</a>
+                <a href="#" class="btn btn-success" onclick="alert('Simulated Checkout Complete!')">Proceed to Checkout</a>
+            </div>
+        <?php endif; ?>
+    </div>
+</body>
+</html>
     
     <?php if (empty($_SESSION['cart'])): ?>
         <p>Your cart is empty.</p>
