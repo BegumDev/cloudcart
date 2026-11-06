@@ -10,18 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $conn->prepare("SELECT id, username, password_hash FROM Users WHERE username = :username");
     $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch(PDO::F<?php
-session_start();
-require_once 'config.php';
-
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
-
-    $stmt = $conn->prepare("SELECT id, username, password_hash FROM Users WHERE username = :username");
-    $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password_hash'])) {
@@ -38,71 +26,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CloudCart - Login</title>
+    <title>Log In - CloudCart</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav>
-        <a href="index.php" class="brand">CloudCart</a>
+        <a href="index.php" class="brand">Cloud<span>Cart</span></a>
         <div class="links">
-            <a href="index.php">Catalog</a>
-            <a href="register.php">Register</a>
+            <a href="index.php">Shop</a>
+            <a href="register.php">Create Account</a>
         </div>
     </nav>
 
-    <div class="auth-wrapper">
+    <div class="auth-container">
         <div class="auth-card">
             <h2>Welcome Back</h2>
-            <?php if ($error): ?><div class="alert alert-error"><?= $error ?></div><?php endif; ?>
+            <?php if ($error): ?>
+                <div style="background: #ffe6e6; color: #dc3545; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    <?= $error ?>
+                </div>
+            <?php endif; ?>
             
             <form action="login.php" method="POST">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" name="username" required placeholder="Enter your username">
+                    <input type="text" name="username" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" required placeholder="Enter your password">
+                    <input type="password" name="password" required>
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn btn-primary">Sign In</button>
             </form>
             <div class="auth-links">
-                <p>Don't have an account? <a href="register.php">Register here</a></p>
+                <p>New to CloudCart? <a href="register.php">Create an account</a></p>
             </div>
         </div>
     </div>
-</body>
-</html>ETCH_ASSOC);
-
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        header("Location: index.php");
-        exit;
-    } else {
-        $error = "Invalid username or password.";
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CloudCart - Login</title>
-    <style>body { font-family: Arial; padding: 20px; }</style>
-</head>
-<body>
-    <h2>Login to CloudCart</h2>
-    <?php if ($error): ?><p style="color:red;"><?= $error ?></p><?php endif; ?>
-    
-    <form action="login.php" method="POST">
-        <label>Username:</label><br>
-        <input type="text" name="username" required><br><br>
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
-    <br><a href="index.php">Back to Home</a>
 </body>
 </html>
