@@ -75,10 +75,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
         <?php else: ?>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <?php foreach ($all_orders as $order): ?>
-                    <?>
-                    <?>
                     <?php 
-                        // Admin default view fetches live status from Function App
                         $liveStatus = fetchLiveOrderStatus($order['order_id']);
                         $items = getOrderItems($conn, $order['order_id']);
                     ?>
@@ -95,7 +92,6 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                     <span style="background: #fff3cd; color: #856404; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
                                         ⚡ Live Status: <?= htmlspecialchars($liveStatus) ?>
                                     </span>
-                                    <!-- Admin Snapshot Refresh Button -->
                                     <a href="https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Get fresh API snapshot">
                                         🔄 Refresh Snapshot
                                     </a>

@@ -59,6 +59,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="wishlist.php">Wishlist</a>
                 <a href="orders.php" style="color: #0056b3;">My Orders</a>
+                <a href="admin.php">Admin Panel</a>
             <?php endif; ?>
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             
@@ -85,9 +86,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
         <?php else: ?>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <?php foreach ($orders as $order): ?>
-                    <?>
                     <?php 
-                        // Default load calls the function app for the current live status
                         $apiResult = fetchLiveOrderStatus($order['order_id']);
                         $liveStatus = $apiResult['status'] ?? 'Processing';
                         $items = getOrderItems($conn, $order['order_id']);
@@ -105,7 +104,6 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                     <span style="background: #e1f5fe; color: #0277bd; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
                                         ⚡ Live Status: <?= htmlspecialchars($liveStatus) ?>
                                     </span>
-                                    <!-- Fresh snapshot refresh button pointing directly to Function App -->
                                     <a href="https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Fetch fresh API snapshot">
                                         🔄 Refresh Snapshot
                                     </a>
