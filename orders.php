@@ -14,7 +14,7 @@ $stmt = $conn->prepare("SELECT order_id, total_amount, shipping_address, created
 $stmt->execute(['user_id' => $user_id]);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Helper function to call your Azure Function App API for tracking
+// Helper function to call your Azure Function App API for a fresh snapshot
 function fetchLiveOrderStatus($orderId) {
     $functionUrl = "https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
     
@@ -59,7 +59,6 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="wishlist.php">Wishlist</a>
                 <a href="orders.php" style="color: #0056b3;">My Orders</a>
-                <a href="admin.php">Admin Panel</a>
             <?php endif; ?>
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             
@@ -73,7 +72,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
     </nav>
 
     <div class="container" style="margin-top: 3rem;">
-        <h2 class="section-title">Order History & Tracking</h2>
+        <h2 class="section-title">Order History & Live Tracking</h2>
         
         <?php if (isset($_GET['success'])): ?>
             <div style="background: #e6ffe6; color: #28a745; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
@@ -86,7 +85,9 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
         <?php else: ?>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <?php foreach ($orders as $order): ?>
+                    <?>
                     <?php 
+                        // Default load calls the function app for the current live status
                         $apiResult = fetchLiveOrderStatus($order['order_id']);
                         $liveStatus = $apiResult['status'] ?? 'Processing';
                         $items = getOrderItems($conn, $order['order_id']);
@@ -100,9 +101,15 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.2rem; font-weight: bold; color: #111; margin-bottom: 0.5rem;">$<?= number_format($order['total_amount'], 2) ?></div>
-                                <span style="background: #e1f5fe; color: #0277bd; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
-                                    ⚡ API Status: <?= htmlspecialchars($liveStatus) ?>
-                                </span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: flex-end;">
+                                    <span style="background: #e1f5fe; color: #0277bd; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
+                                        ⚡ Live Status: <?= htmlspecialchars($liveStatus) ?>
+                                    </span>
+                                    <!-- Fresh snapshot refresh button pointing directly to Function App -->
+                                    <a href="https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Fetch fresh API snapshot">
+                                        🔄 Refresh Snapshot
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         
@@ -117,7 +124,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                         </li>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <li style="font-size: 0.9rem; color: #888;">No item details linked to this legacy order.</li>
+                                    <li style="font-size: 0.9rem; color: #888;">No item details linked to this order.</li>
                                 <?php endif; ?>
                             </ul>
                         </div>
