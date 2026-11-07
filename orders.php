@@ -59,6 +59,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="wishlist.php">Wishlist</a>
                 <a href="orders.php" style="color: #0056b3;">My Orders</a>
+                <a href="admin.php">Admin Panel</a>
             <?php endif; ?>
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             
