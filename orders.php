@@ -16,7 +16,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Helper function to call your Azure Function App API for a fresh snapshot
 function fetchLiveOrderStatus($orderId) {
-    $functionUrl = "https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
+    $functionUrl = "cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net" . urlencode($orderId);
     
     $context = stream_context_create([
         "http" => ["method" => "GET", "timeout" => 3]

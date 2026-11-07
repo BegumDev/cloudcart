@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Helper function to query the Azure Function App API for a fresh snapshot
 function fetchLiveOrderStatus($orderId) {
-    $functionUrl = "https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
+    $functionUrl = "cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net" . urlencode($orderId);
     
     $context = stream_context_create([
         "http" => ["method" => "GET", "timeout" => 3]
