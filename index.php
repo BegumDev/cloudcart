@@ -23,6 +23,11 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
         <a href="index.php" class="brand">Cloud<span>Cart</span></a>
         <div class="links">
             <a href="index.php">Shop</a>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="wishlist.php">Wishlist</a>
+            <?php endif; ?>
+            
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             
             <?php if (isset($_SESSION['user_id'])): ?>
@@ -53,11 +58,22 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                 <span class="product-price">$<?= number_format($product['price'], 2) ?></span>
                                 <span class="product-stock"><?= $product['stock_quantity'] ?> left</span>
                             </div>
-                            <form action="cart.php" method="POST">
-                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                <input type="hidden" name="action" value="add">
-                                <button type="submit" class="btn btn-primary">Add to Cart</button>
-                            </form>
+                            
+                            <div style="display: flex; gap: 0.5rem;">
+                                <form action="cart.php" method="POST" style="flex: 1;">
+                                    <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                </form>
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                <form action="wishlist.php" method="POST" style="flex: 1;">
+                                    <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit" class="btn btn-outline">⭐ Save</button>
+                                </form>
+                                <?php endif; ?>
+                            </div>
+
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -68,7 +84,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
     </div>
     
     <footer>
-        <p>&copy; 2026 CloudCart Inc. Demo Store for Azure Deployment.</p>
+        <p>&copy; 2026 CloudCart Inc. Secure Cloud E-Commerce Platform.</p>
     </footer>
 </body>
 </html>
