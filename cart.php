@@ -94,7 +94,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                 
                 <div class="cart-actions">
                     <a href="cart.php?action=clear" class="btn btn-outline" style="width: auto;">Empty Cart</a>
-                    <a href="cart.php?action=checkout" class="btn btn-success" style="width: auto; background-color: #28a745;">Complete Virtual Payment</a>
+                    <a href="checkout.php" class="btn btn-success" style="width: auto; background-color: #28a745; text-align: center; text-decoration: none;">Proceed to Checkout</a>
                 </div>
             <?php endif; ?>
         </div>
