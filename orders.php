@@ -14,9 +14,9 @@ $stmt = $conn->prepare("SELECT order_id, total_amount, shipping_address, created
 $stmt->execute(['user_id' => $user_id]);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Helper function to call your Azure Function App API for a fresh snapshot
+// Helper function to call your Azure Function App API with the correct full URL
 function fetchLiveOrderStatus($orderId) {
-    $functionUrl = "cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net" . urlencode($orderId);
+    $functionUrl = "https://cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
     
     $context = stream_context_create([
         "http" => ["method" => "GET", "timeout" => 3]
@@ -104,7 +104,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                     <span style="background: #e1f5fe; color: #0277bd; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
                                         ⚡ Live Status: <?= htmlspecialchars($liveStatus) ?>
                                     </span>
-                                    <a href="https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Fetch fresh API snapshot">
+                                    <a href="https://cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Fetch fresh API snapshot">
                                         🔄 Refresh Snapshot
                                     </a>
                                 </div>

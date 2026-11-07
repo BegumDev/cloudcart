@@ -7,9 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Helper function to query the Azure Function App API for a fresh snapshot
+// Helper function to query the Azure Function App API for a fresh snapshot with the correct full URL
 function fetchLiveOrderStatus($orderId) {
-    $functionUrl = "cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net" . urlencode($orderId);
+    $functionUrl = "https://cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
     
     $context = stream_context_create([
         "http" => ["method" => "GET", "timeout" => 3]
@@ -92,7 +92,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
                                     <span style="background: #fff3cd; color: #856404; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
                                         ⚡ Live Status: <?= htmlspecialchars($liveStatus) ?>
                                     </span>
-                                    <a href="https://cloudcart-function-app.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Get fresh API snapshot">
+                                    <a href="https://cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net/api/orderstatus?orderId=<?= $order['order_id'] ?>" target="_blank" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; text-decoration: none;" title="Get fresh API snapshot">
                                         🔄 Refresh Snapshot
                                     </a>
                                 </div>
