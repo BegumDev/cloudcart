@@ -10,6 +10,7 @@ try {
 }
 
 $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+$is_admin   = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,13 +28,15 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="wishlist.php">Wishlist</a>
                 <a href="orders.php">My Orders</a>
-                <a href="admin.php">Admin Panel</a>
+                <?php if ($is_admin): ?>
+                    <a href="admin.php" style="color: #0056b3; font-weight: bold;">Admin Panel</a>
+                <?php endif; ?>
             <?php endif; ?>
             
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             
             <?php if (isset($_SESSION['user_id'])): ?>
-                <span>Hi, <?= htmlspecialchars($_SESSION['username']) ?></span>
+                <span>Hi, <?= htmlspecialchars($_SESSION['username']) ?><?= $is_admin ? ' (Admin)' : '' ?></span>
                 <a href="logout.php">Logout</a>
             <?php else: ?>
                 <a href="login.php">Log In</a>
