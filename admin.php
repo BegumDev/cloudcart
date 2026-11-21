@@ -7,7 +7,17 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? 'customer') !== 'admin
     exit;
 }
 
-// Helper function to query the Azure Function App API for a fresh snapshot with the correct full URL
+// Fetch quick inventory stats for the Product Management summary card
+$statsStmt = $conn->query("
+    SELECT 
+        COUNT(*) AS total_products,
+        SUM(CASE WHEN stock_quantity > 0 THEN 1 ELSE 0 END) AS in_stock,
+        SUM(CASE WHEN stock_quantity = 0 THEN 1 ELSE 0 END) AS out_of_stock
+    FROM Products
+");
+$inventory_stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
+
+// Helper function to query the Azure Function App API for a fresh snapshot
 function fetchLiveOrderStatus($orderId) {
     $functionUrl = "https://cloudcart-function-app-hkaqfva6gwhub8b5.switzerlandnorth-01.azurewebsites.net/api/orderstatus?orderId=" . urlencode($orderId);
     
@@ -60,6 +70,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
         <div class="links">
             <a href="index.php">View Store</a>
             <a href="admin.php" style="color: #0056b3;">Admin Dashboard</a>
+            <a href="admin_products.php">Manage Products</a>
             <a href="cart.php">Cart (<?= $cart_count ?>)</a>
             <span>Hi, <?= htmlspecialchars($_SESSION['username']) ?> (Admin)</span>
             <a href="logout.php">Logout</a>
@@ -67,7 +78,29 @@ $cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
     </nav>
 
     <div class="container" style="margin-top: 3rem;">
-        <h2 class="section-title">Shop Management & Live Order Monitoring</h2>
+        <!-- PRODUCT CATALOG MANAGEMENT SECTION -->
+        <h2 class="section-title">Product Catalog Management</h2>
+        <div style="background: white; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div>
+                <h3 style="margin-bottom: 0.35rem; color: #333;">Inventory &amp; Catalog Controls</h3>
+                <p style="color: #666; font-size: 0.92rem; margin-bottom: 0.5rem;">
+                    Add new products, edit descriptions and pricing, organize categories, and update real-time stock quantities.
+                </p>
+                <div style="display: flex; gap: 1rem; font-size: 0.88rem; color: #444;">
+                    <span><strong>Total Products:</strong> <?= (int)($inventory_stats['total_products'] ?? 0) ?></span>
+                    <span><strong>In Stock:</strong> <?= (int)($inventory_stats['in_stock'] ?? 0) ?></span>
+                    <span style="color: #dc3545;"><strong>Out of Stock:</strong> <?= (int)($inventory_stats['out_of_stock'] ?? 0) ?></span>
+                </div>
+            </div>
+            <div>
+                <a href="admin_products.php" class="btn btn-primary" style="text-decoration: none; display: inline-block; padding: 0.7rem 1.25rem;">
+                    Manage Products &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- LIVE ORDER MONITORING SECTION -->
+        <h2 class="section-title">Shop Management &amp; Live Order Monitoring</h2>
         <p style="color: #666; margin-bottom: 2rem;">Inspect global customer orders, verify itemized purchases, and query real-time serverless tracking snapshots.</p>
 
         <?php if (empty($all_orders)): ?>
